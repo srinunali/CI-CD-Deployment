@@ -28,11 +28,23 @@ pipeline {
             }
         }  
         
+        stage('Trivy scan'){
+            steps{
+                
+                sh "trivy fs --format table -o fs.html ."
+                /* script{
+                def trivyoutput = sh(script: "trivy fs  .", returnStdout: true).trim()
+                    println trivyOutput
+                } */
+            }
+            
+        }
+        
         stage('SonarQube Analysis'){
             steps{
                withSonarQubeEnv('sonar-server') {
-            sh ''' $CANNER_HOME/bin/sonar-scanner -Dsonar.projectName=Blogging-app  -Dsonar.projectKey=Blogging-app -Dsonar.java.binaries=target  '''
-                }
+            sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=CI_CD-Deployment  -Dsonar.projectKey=CI_CD-Deployment -Dsonar.java.binaries=target  '''
+}
             }
         } 
         
