@@ -10,7 +10,7 @@ minikube start --driver=docker --network=sonar-net --nodes=2
 
 docker run -d \
   --name jenkins \
-  --network sonar-net
+  --network mini-net
   -u root \
   -p 8080:8080 -p 50000:50000 \
   -v jenkins_home:/var/jenkins_home \
@@ -20,7 +20,7 @@ docker run -d \
 
 2) SonarQube Container setup on windows:
 
-docker run -d --name sonarqube --network soanr-net -p 9000:9000 sonarqube:lts
+docker run -d --name sonarqube --network mini-net -p 9000:9000 sonarqube:lts
 
 
 3) Trivy install inside the jenkins container
@@ -38,5 +38,14 @@ curl -LO "https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl"
 chmod +x ./kubectl
 mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
+
+
+If Minikube getting errors with the ip exists create new sun=bnet ids
+
+docker network create `
+  --driver=bridge `
+  --subnet=192.168.77.0/24 `
+  --gateway=192.168.77.1 `
+  mini-net
 
 
