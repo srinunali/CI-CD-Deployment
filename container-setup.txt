@@ -1,1 +1,37 @@
+Custome network creat:
+docker create network sonar-net
+
+1) Jenkins container setup on windows:
+
+docker run -d \
+  --name jenkins \
+  --network sonar-net
+  -u root \
+  -p 8080:8080 -p 50000:50000 \
+  -v jenkins_home:/var/jenkins_home \
+  -v ~/.kube:/root/.kube \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  jenkins/jenkins:lts
+
+2) SonarQube Container setup on windows:
+
+docker run -d --name sonarqube --network soanr-net -p 9000:9000 sonarqube:lts
+
+
+3) Trivy install inside the jenkins container
+
+apt update && apt install -y wget gnupg lsb-release
+wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main" \
+    > /etc/apt/sources.list.d/trivy.list
+apt update
+apt install -y trivy
+
+4) Kubectl Install inside the jenkins container using curl:
+
+curl -LO "https://dl.k8s.io/release/v1.26.0/bin/linux/amd64/kubectl"
+chmod +x ./kubectl
+mv ./kubectl /usr/local/bin/kubectl
+kubectl version --client
+
 
