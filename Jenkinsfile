@@ -18,13 +18,13 @@ pipeline {
         
         stage('Maven compile'){
             steps{
-                sh "mvn clean compile"
+                sh "mvn compile"
             }
         } 
         
         stage('Maven test'){
             steps{
-                sh "mvn clean test"
+                sh "mvn test"
             }
         }  
         
@@ -50,14 +50,14 @@ pipeline {
             
             stage('Maven Build'){
                 steps{
-                    sh "mvn clean package"
+                    sh "mvn package"
                 }
             }
             
             stage ('Docker Image build'){
                 steps{
                     script{
-                    withDockerRegistry(credentialsId: 'docker-cred') {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
                          sh "docker build -t srinu1995/srinivas:latest ."
                       }
                     }
@@ -67,7 +67,7 @@ pipeline {
             stage('Image push to repo'){
                 steps{
                     script{
-                    withDockerRegistry(credentialsId: 'docker-cred') {
+                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker')  {
                          sh "docker push srinu1995/srinivas:latest"
                       }
                     }
@@ -83,16 +83,17 @@ pipeline {
             
             stage('K8s Deployment'){
                 steps{
-                    withKubeConfig(caCertificate: '', clusterName: 'minikube', contextName: '', credentialsId: '', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://127.0.0.1:59780') {
-                          sh "kubectl aply -f deployment-service:latest"
+                    withKubeConfig(caCertificate: '', clusterName: 'minikube', contextName: 'minikube', credentialsId: 'k8s-secret', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.77.2:8443') {
+                          sh "kubectl apply -f ./k8s-files/deployment-service.yml -n webapps"
                     } 
                 }
             }
             
             stage('K8s Deployment check'){
                 steps{
-                    withKubeConfig(caCertificate: '', clusterName: 'minikube', contextName: '', credentialsId: '', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://127.0.0.1:59780') {
-                          sh "kubectl get pods svc -n webappps"
+                   withKubeConfig(caCertificate: '', clusterName: 'minikube', contextName: 'minikube', credentialsId: 'k8s-secret', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://192.168.77.2:8443')  {
+                          sh "kubectl get pods -n webappps"
+                          sh "kubectl get svc -n webappps"
                     } 
                 }
             }
