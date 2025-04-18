@@ -40,12 +40,24 @@ mv ./kubectl /usr/local/bin/kubectl
 kubectl version --client
 
 
-If Minikube getting errors with the ip exists create new sun=bnet ids
+5) If Minikube getting errors with the ip exists create new sun=bnet ids
 
 docker network create `
   --driver=bridge `
   --subnet=192.168.77.0/24 `
   --gateway=192.168.77.1 `
   mini-net
+
+6) If get the service end point of the minikube
+
+minikube ip
+
+kubectl cluster-info
+
+7) creating docker-hub login into k8s:
+
+kubectl create secret docker-registry my-secret --docker-server='https://index.docker.io/v1/' --docker-username='<user-name>' --docker-password='<password>' --namespace=webapps
+
+
 
 
