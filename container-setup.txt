@@ -8,14 +8,14 @@ minikube start --driver=docker --network=mini-net --nodes=2
 
 1) Jenkins container setup on windows:
 
-docker run -d \
-  --name jenkins \
-  --network mini-net
-  -u root \
-  -p 8080:8080 -p 50000:50000 \
-  -v jenkins_home:/var/jenkins_home \
-  -v ~/.kube:/root/.kube \
-  -v /var/run/docker.sock:/var/run/docker.sock \
+docker run -d `
+  --name jenkins `
+  --network mini-net `
+  -u root `
+  -p 8080:8080 -p 50000:50000 `
+  -v jenkins_home:/var/jenkins_home `
+  -v ~/.kube:/root/.kube `
+  -v /var/run/docker.sock:/var/run/docker.sock `
   jenkins/jenkins:lts
 
 2) SonarQube Container setup on windows:
