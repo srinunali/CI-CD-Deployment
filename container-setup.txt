@@ -1,6 +1,11 @@
 Custome network creat:
 docker create network sonar-net
 
+Minikube start:
+
+minikube start --driver=docker --network=sonar-net --nodes=2
+
+
 1) Jenkins container setup on windows:
 
 docker run -d \
