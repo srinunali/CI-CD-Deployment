@@ -4,14 +4,7 @@ metadata:
   name: app-role
   namespace: webapps
 rules:
-  - apiGroups:
-        - ""
-        - apps
-        - autoscaling
-        - batch
-        - extensions
-        - policy
-        - rbac.authorization.k8s.io
+  - apiGroups: [""]
     resources:
       - pods
       - secrets
